@@ -1,0 +1,33 @@
+name: Build and Upload Keys
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Install Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libssl-dev make openssl
+
+      - name: Build and Run Keys
+        run: |
+          make
+          ./xpkey
+          ./srv2003key
+
+      - name: Upload Keys
+        uses: actions/upload-artifact@v2
+        with:
+          name: keys
+          path: |
+            xpkey
+            srv2003key
